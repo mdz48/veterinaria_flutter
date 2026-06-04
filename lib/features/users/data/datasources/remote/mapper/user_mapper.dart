@@ -4,11 +4,11 @@ import 'package:veterinaria/features/users/domain/entities/user.dart';
 extension UserModelMapper on UserModel {
   static UserModel fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'] ?? '',
-      name: map['name'] ?? '',
-      lastName: map['lastName'] ?? '',
-      email: map['email'] ?? '',
-      role: map['role'] ?? '',
+      id: map['id'] as String? ?? '',
+      name: map['name'] as String?,
+      lastName: map['lastName'] as String?,
+      email: map['email'] as String? ?? '',
+      role: map['role'] as String?,
     );
   }
 

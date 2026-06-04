@@ -6,8 +6,14 @@ import 'package:veterinaria/core/di/app_container.dart';
 import 'package:veterinaria/features/users/presentation/providers/login_provider.dart';
 import 'package:device_preview/device_preview.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:veterinaria/firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   final container = AppContainer();
 
