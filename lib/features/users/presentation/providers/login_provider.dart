@@ -24,8 +24,9 @@ class LoginProvider with ChangeNotifier {
     try {
       _user = await _loginUsecase.execute(email, password);
       _status = LoginStatus.success;
-    } catch (_) {
+    } catch (e) {
       _status = LoginStatus.error;
+      _error = e.toString();
     } finally {
       notifyListeners();
     }

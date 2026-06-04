@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:veterinaria/features/users/presentation/pages/register_page.dart';
 import 'package:veterinaria/features/users/presentation/providers/login_provider.dart';
+import 'package:veterinaria/features/appointments/presentation/pages/appointments_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -106,6 +107,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 24),
                         switch (provider.status) {
+                          LoginStatus.success => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                           LoginStatus.loading => const Center(
                             child: CircularProgressIndicator(),
                           ),
@@ -144,11 +148,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _login(BuildContext context) {
-    context.read<LoginProvider>().login(
+  Future<void> _login(BuildContext context) async {
+    final provider = context.read<LoginProvider>();
+    await provider.login(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
+
+    if (!context.mounted) return;
+
+    if (provider.status == LoginStatus.success) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const AppointmentsPage(),
+        ),
+      );
+    }
   }
 
   Widget _loginButton(BuildContext context) {
