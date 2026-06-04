@@ -28,4 +28,38 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       throw Exception('Failed to create appointment: $e');
     }
   }
+  @override
+  Future<List<Appointment>> getAppointmentsbyUserId(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('appointments')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        return AppointmentModelMapper.fromMap(doc.data()).toEntity();
+      }).toList();
+    } catch (e) {
+      throw Exception('Failed to get appointments by user ID: $e');
+    }
+  }
+  @override
+  Future<Appointment> updateAppointment(Appointment appointment) async {
+    try {
+      final docRef = _firestore.collection('appointments').doc(appointment.id);
+      final model = appointment.toModel();
+      await docRef.update(model.toJson());
+      return appointment;
+    } catch (e) {
+      throw Exception('Failed to update appointment: $e');
+    }
+  }
+  @override
+  Future<void> deleteAppointment(String id) async {
+    try {
+      await _firestore.collection('appointments').doc(id).delete();
+    } catch (e) {
+      throw Exception('Failed to delete appointment: $e');
+    }
+  }
 }

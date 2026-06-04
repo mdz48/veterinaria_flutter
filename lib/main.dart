@@ -5,6 +5,8 @@ import 'package:veterinaria/app.dart';
 import 'package:veterinaria/core/di/app_container.dart';
 import 'package:veterinaria/features/appointments/presentation/providers/appointments_provider.dart';
 import 'package:veterinaria/features/appointments/presentation/providers/create_appointment_provider.dart';
+import 'package:veterinaria/features/appointments/presentation/providers/update_appointment_provider.dart';
+import 'package:veterinaria/features/appointments/presentation/providers/delete_appointment_provider.dart';
 import 'package:veterinaria/features/users/presentation/providers/login_provider.dart';
 import 'package:device_preview/device_preview.dart';
 
@@ -31,11 +33,23 @@ void main() async {
               RegisterProvider(container.userModule.registerUsecase),
         ),
         ChangeNotifierProvider(
-          create: (_) => AppointmentsProvider(),
+          create: (_) => AppointmentsProvider(
+            container.appointmentModule.getAppointmentsByUserIdUsecase,
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => CreateAppointmentProvider(
             container.appointmentModule.createAppointmentUsecase,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UpdateAppointmentProvider(
+            container.appointmentModule.updateAppointmentUsecase,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DeleteAppointmentProvider(
+            container.appointmentModule.deleteAppointmentUsecase,
           ),
         ),
       ],
