@@ -29,7 +29,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<bool> register(String email, String password) async {
+  Future<bool> register(String email, String password, String name, String lastName) async {
     final credential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -38,6 +38,8 @@ class UserRepositoryImpl implements UserRepository {
     final uid = credential.user!.uid;
     await _firestore.collection('users').doc(uid).set({
       'email': email,
+      'name': name,
+      'lastName': lastName,
       'role': 'client',
     });
 

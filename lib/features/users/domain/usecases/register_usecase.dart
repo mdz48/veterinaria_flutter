@@ -5,7 +5,7 @@ class RegisterUsecase {
 
   RegisterUsecase(this.repository);
 
-  Future<bool> execute(String email, String password) async {
-    return await repository.register(email, password);
+  Future<bool> execute(String email, String password, String name, String lastName) async {
+    return await repository.register(email, password, name, lastName);
   }
 }

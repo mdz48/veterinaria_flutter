@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:veterinaria/features/users/presentation/pages/register_page.dart';
 import 'package:veterinaria/features/users/presentation/providers/login_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,6 +14,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -24,7 +27,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final provider = context.watch<LoginProvider>();
     final colorScheme = Theme.of(context).colorScheme;
-    final textScheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: Container(
@@ -32,50 +36,107 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primary,
-              colorScheme.secondary,
-            ],
+            colors: [colorScheme.primary, colorScheme.secondary],
           ),
         ),
         child: Center(
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Login', style: textScheme.headlineMedium),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  isDark
+                      ? 'assets/images/black_logo.svg'
+                      : 'assets/images/white_logo.svg',
+                  height: 200,
+                ),
+                const SizedBox(height: 28),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 16),
-                  switch (provider.status) {
-                    LoginStatus.loading => const CircularProgressIndicator(),
-                    LoginStatus.error => Column(
-                        children: [
-                          Text(
-                            provider.error ?? 'Error al iniciar sesion',
-                            style: TextStyle(color: colorScheme.error),
+                  elevation: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(28),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Iniciar sesión',
+                          style: textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(height: 8),
-                          _loginButton(context),
-                        ],
-                      ),
-                    _ => _loginButton(context),
-                  },
-                ],
-              ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            labelText: 'Correo electrónico',
+                            prefixIcon: Icon(Icons.email_outlined),
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Contraseña',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                              onPressed: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
+                            ),
+                          ),
+                          obscureText: _obscurePassword,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => _login(context),
+                        ),
+                        const SizedBox(height: 24),
+                        switch (provider.status) {
+                          LoginStatus.loading => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          LoginStatus.error => Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                provider.error ?? 'Error al iniciar sesión',
+                                style: TextStyle(color: colorScheme.error),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 12),
+                              _loginButton(context),
+                            ],
+                          ),
+                          _ => _loginButton(context),
+                        },
+                        const SizedBox(height: 12),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const RegisterPage(),
+                            ),
+                          ),
+                          child: const Text('Crear cuenta'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -83,15 +144,17 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _loginButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        context.read<LoginProvider>().login(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-        );
-      },
-      child: const Text('Login'),
+  void _login(BuildContext context) {
+    context.read<LoginProvider>().login(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
     );
   }
-}
+
+  Widget _loginButton(BuildContext context) {
+    return FilledButton(
+      onPressed: () => _login(context),
+      child: const Text('Iniciar sesion'),
+    );
+  }
+}

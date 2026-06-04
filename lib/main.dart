@@ -7,6 +7,7 @@ import 'package:veterinaria/features/users/presentation/providers/login_provider
 import 'package:device_preview/device_preview.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:veterinaria/features/users/presentation/providers/register_provider.dart';
 import 'package:veterinaria/firebase_options.dart';
 
 void main() async {
@@ -22,6 +23,10 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (_) => LoginProvider(container.userModule.loginUsecase),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              RegisterProvider(container.userModule.registerUsecase),
         ),
       ],
       child: DevicePreview(
