@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veterinaria/app.dart';
 import 'package:veterinaria/core/di/app_container.dart';
+import 'package:veterinaria/features/appointments/presentation/providers/appointments_provider.dart';
+import 'package:veterinaria/features/appointments/presentation/providers/create_appointment_provider.dart';
 import 'package:veterinaria/features/users/presentation/providers/login_provider.dart';
 import 'package:device_preview/device_preview.dart';
 
@@ -27,6 +29,14 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) =>
               RegisterProvider(container.userModule.registerUsecase),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AppointmentsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CreateAppointmentProvider(
+            container.appointmentModule.createAppointmentUsecase,
+          ),
         ),
       ],
       child: DevicePreview(
