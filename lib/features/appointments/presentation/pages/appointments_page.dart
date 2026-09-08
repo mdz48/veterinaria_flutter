@@ -33,19 +33,25 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Citas')),
       body: _buildBody(provider),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const CreateAppointmentPage()),
-          );
-          if (!context.mounted) return;
-          final userId = context.read<LoginProvider>().user?.id;
-          if (userId != null) {
-            context.read<AppointmentsProvider>().loadAppointments(userId);
-          }
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Semantics(
+        identifier: 'create_appointment_fab',
+        label: 'Crear cita',
+        child: FloatingActionButton(
+          key: const Key('create_appointment_fab'),
+          tooltip: 'Crear cita',
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CreateAppointmentPage()),
+            );
+            if (!context.mounted) return;
+            final userId = context.read<LoginProvider>().user?.id;
+            if (userId != null) {
+              context.read<AppointmentsProvider>().loadAppointments(userId);
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

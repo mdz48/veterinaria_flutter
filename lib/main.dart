@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 import 'package:veterinaria/app.dart';
 import 'package:veterinaria/core/di/app_container.dart';
@@ -16,6 +17,7 @@ import 'package:veterinaria/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SemanticsBinding.instance.ensureSemantics();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -54,7 +56,7 @@ void main() async {
         ),
       ],
       child: DevicePreview(
-        enabled: isSkiaWeb,
+        enabled: kIsWeb,
         builder: (context) => App(container: container),
       ),
     ),

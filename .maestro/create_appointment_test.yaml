@@ -1,0 +1,44 @@
+appId: com.mdz.application.veterinaria
+---
+# 1. Iniciar sesión reutilizando el flujo de login
+- runFlow: login_test.yaml
+
+# 2. Abrir la pantalla de creación de cita (usando el ID del botón flotante)
+- tapOn:
+    id: "create_appointment_fab"
+
+# 3. Validar que la pantalla de creación está visible
+- assertVisible:
+    text: ".*Crear Cita.*"
+
+# 4. Ingresar el nombre de la mascota
+- tapOn:
+    text: ".*Nombre de la Mascota.*"
+- inputText: "Firulais"
+
+# 5. Seleccionar Fecha (acepta la fecha por defecto del DatePicker)
+- tapOn:
+    text: ".*Seleccionar Fecha.*"
+- tapOn:
+    text: ".*OK.*|.*ACEPTAR.*|.*Aceptar.*"
+
+# 6. Seleccionar Hora (acepta la hora por defecto del TimePicker)
+- tapOn:
+    text: ".*Seleccionar Hora.*"
+- tapOn:
+    text: ".*OK.*|.*ACEPTAR.*|.*Aceptar.*"
+
+# 7. Ingresar el motivo de la cita
+- tapOn:
+    text: ".*Motivo de la Cita.*"
+- inputText: "Chequeo general y vacunas"
+
+- hideKeyboard
+
+# 8. Presionar el botón para crear la cita
+- tapOn:
+    text: "Crear Cita"
+
+# 9. Verificar que la cita fue creada y se muestra en la lista
+- assertVisible:
+    text: ".*Firulais.*"

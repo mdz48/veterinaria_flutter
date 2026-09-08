@@ -1,0 +1,26 @@
+appId: com.mdz.application.veterinaria
+appFile: ../build/app/outputs/flutter-apk/app-debug.apk
+---
+- launchApp
+
+# 1. Esperar que cargue la pantalla principal de login
+- assertVisible:
+    text: ".*Iniciar.*"
+
+# 2. Rellenar correo y contraseña
+- tapOn:
+    text: ".*Correo electrónico*"
+- inputText: "nuevo@gmail.com"
+
+- tapOn:
+    text: ".*Contraseña.*"
+- inputText: "123456"
+
+- hideKeyboard
+
+# 3. Probar navegación a la pantalla de Registro
+- tapOn:
+    text: ".*Iniciar sesion.*"
+
+- assertVisible:
+    text: ".*Citas*"
