@@ -34,6 +34,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       appBar: AppBar(title: const Text('Citas')),
       body: _buildBody(provider),
       floatingActionButton: FloatingActionButton(
+        key: const Key('create_appointment_fab'),
         onPressed: () async {
           await Navigator.push(
             context,
